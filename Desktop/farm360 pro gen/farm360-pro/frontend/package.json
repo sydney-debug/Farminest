@@ -1,0 +1,19 @@
+{
+  "name": "farm360-frontend",
+  "version": "1.0.0",
+  "description": "Farm360 Pro Frontend - Farm Management System UI",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --port=3000",
+    "build": "echo 'No build process needed for static HTML/CSS/JS'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["farm", "management", "html", "css", "javascript"],
+  "author": "Farm360 Pro",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "type": "module"
+}

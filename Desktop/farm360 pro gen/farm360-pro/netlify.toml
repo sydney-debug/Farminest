@@ -1,0 +1,28 @@
+# Farm360 Pro - Netlify Configuration
+
+# Build settings for Netlify
+[build]
+  # No build command needed for static HTML/CSS/JS
+  command = "echo 'No build process needed for static files'"
+
+  # Publish directory (frontend folder)
+  publish = "frontend/"
+
+# Headers for security and CORS
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Redirect rules for SPA (if needed)
+[[redirects]]
+  from = "/api/*"
+  to = "https://your-backend-url.com/api/:splat"
+  status = 200
+
+# Environment variables (add these in Netlify dashboard)
+# VITE_API_URL=https://your-backend-url.com
+# VITE_GOOGLE_MAPS_API_KEY=your_key_here
