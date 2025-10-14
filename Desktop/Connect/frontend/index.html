@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmTrak 360 - Comprehensive Farm Management</title>
+    <meta name="description" content="Complete farm management solution for modern farmers. Track livestock, crops, manage finances, and connect with agricultural professionals.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Leaflet for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dark-theme.css">
+    <link rel="stylesheet" href="css/mobile.css">
+</head>
+<body class="theme-light">
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <!-- Logo -->
+                <div class="nav-logo">
+                    <i class="fas fa-seedling"></i>
+                    <span class="logo-text">FarmTrak 360</span>
+                </div>
+
+                <!-- Mobile menu toggle -->
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <!-- Navigation Links -->
+                <div class="nav-links" id="navLinks">
+                    <a href="#" class="nav-link active" data-page="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="farms">
+                        <i class="fas fa-home"></i>
+                        <span>Farms</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="livestock">
+                        <i class="fas fa-cow"></i>
+                        <span>Livestock</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="crops">
+                        <i class="fas fa-seedling"></i>
+                        <span>Crops</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="vets">
+                        <i class="fas fa-user-md"></i>
+                        <span>Vets</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="agrovets">
+                        <i class="fas fa-store"></i>
+                        <span>Agrovets</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="sharing">
+                        <i class="fas fa-users"></i>
+                        <span>Community</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="contacts">
+                        <i class="fas fa-address-book"></i>
+                        <span>Contacts</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="maps">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Maps</span>
+                    </a>
+                </div>
+
+                <!-- User Actions -->
+                <div class="nav-actions">
+                    <!-- Theme Toggle -->
+                    <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+
+                    <!-- Notifications -->
+                    <button class="notification-btn" id="notificationBtn" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge">0</span>
+                    </button>
+
+                    <!-- User Menu -->
+                    <div class="user-menu">
+                        <button class="user-menu-toggle" id="userMenuToggle">
+                            <div class="user-avatar" id="userAvatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="user-name" id="userName">Loading...</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+
+                        <div class="user-menu-dropdown" id="userMenuDropdown">
+                            <a href="#" class="user-menu-item" data-action="profile">
+                                <i class="fas fa-user"></i>
+                                <span>Profile</span>
+                            </a>
+                            <a href="#" class="user-menu-item" data-action="settings">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                            <a href="#" class="user-menu-item" data-action="help">
+                                <i class="fas fa-question-circle"></i>
+                                <span>Help & Support</span>
+                            </a>
+                            <div class="user-menu-divider"></div>
+                            <a href="#" class="user-menu-item" data-action="logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Loading Spinner -->
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner"></div>
+            <p>Loading FarmTrak 360...</p>
+        </div>
+
+        <!-- Page Content Container -->
+        <div class="page-container" id="pageContainer">
+            <!-- Dashboard Page -->
+            <div class="page" id="dashboardPage">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                    <p>Welcome back! Here's an overview of your farm operations.</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalFarms">0</h3>
+                            <p>Total Farms</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-cow"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalLivestock">0</h3>
+                            <p>Livestock</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalCrops">0</h3>
+                            <p>Active Crops</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalRevenue">$0</h3>
+                            <p>Monthly Revenue</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="charts-row">
+                    <!-- Livestock by Species Chart -->
+                    <div class="chart-container">
+                        <h3>Livestock Distribution</h3>
+                        <canvas id="livestockChart"></canvas>
+                    </div>
+
+                    <!-- Crop Performance Chart -->
+                    <div class="chart-container">
+                        <h3>Crop Performance</h3>
+                        <canvas id="cropsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="activities-section">
+                    <h3>Recent Activities</h3>
+                    <div class="activities-list" id="recentActivities">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="activity-content">
+                                <p>Welcome to FarmTrak 360! Your farm management journey starts here.</p>
+                                <span class="activity-time">Just now</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Farms Page -->
+            <div class="page" id="farmsPage" style="display: none;">
+                <div class="page-header">
+                    <h1>Farm Management</h1>
+                    <p>Manage your farms and track their performance.</p>
+                    <button class="btn btn-primary" id="addFarmBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Farm
+                    </button>
+                </div>
+
+                <div class="farms-grid" id="farmsGrid">
+                    <!-- Farms will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Livestock Page -->
+            <div class="page" id="livestockPage" style="display: none;">
+                <div class="page-header">
+                    <h1>Livestock Management</h1>
+                    <p>Track and manage your livestock inventory.</p>
+                    <button class="btn btn-primary" id="addLivestockBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Livestock
+                    </button>
+                </div>
+
+                <div class="livestock-grid" id="livestockGrid">
+                    <!-- Livestock will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Crops Page -->
+            <div class="page" id="cropsPage" style="display: none;">
+                <div class="page-header">
+                    <h1>Crop Management</h1>
+                    <p>Monitor your crops and track their progress.</p>
+                    <button class="btn btn-primary" id="addCropBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Crop
+                    </button>
+                </div>
+
+                <div class="crops-grid" id="cropsGrid">
+                    <!-- Crops will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Vets Page -->
+            <div class="page" id="vetsPage" style="display: none;">
+                <div class="page-header">
+                    <h1>Veterinary Services</h1>
+                    <p>Find veterinarians and manage animal health.</p>
+                </div>
+
+                <div class="vets-section" id="vetsSection">
+                    <!-- Vets will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Agrovets Page -->
+            <div class="page" id="agrovetsPage" style="display: none;">
+                <div class="page-header">
+                    <h1>Agricultural Suppliers</h1>
+                    <p>Find suppliers for seeds, fertilizers, and equipment.</p>
+                </div>
+
+                <div class="agrovets-section" id="agrovetsSection">
+                    <!-- Agrovets will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Community Page -->
+            <div class="page" id="sharingPage" style="display: none;">
+                <div class="page-header">
+                    <h1>Community</h1>
+                    <p>Share knowledge and connect with other farmers.</p>
+                    <button class="btn btn-primary" id="addPostBtn">
+                        <i class="fas fa-plus"></i>
+                        Share Post
+                    </button>
+                </div>
+
+                <div class="community-section" id="communitySection">
+                    <!-- Community posts will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Contacts Page -->
+            <div class="page" id="contactsPage" style="display: none;">
+                <div class="page-header">
+                    <h1>Contacts</h1>
+                    <p>Manage your agricultural contacts and network.</p>
+                    <button class="btn btn-primary" id="addContactBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Contact
+                    </button>
+                </div>
+
+                <div class="contacts-section" id="contactsSection">
+                    <!-- Contacts will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Maps Page -->
+            <div class="page" id="mapsPage" style="display: none;">
+                <div class="page-header">
+                    <h1>Farm Maps</h1>
+                    <p>View your farms and livestock locations on the map.</p>
+                </div>
+
+                <div class="map-container">
+                    <div class="map-controls">
+                        <button class="btn btn-secondary" id="showFarmsBtn">
+                            <i class="fas fa-home"></i>
+                            Show Farms
+                        </button>
+                        <button class="btn btn-secondary" id="showLivestockBtn">
+                            <i class="fas fa-cow"></i>
+                            Show Livestock
+                        </button>
+                        <button class="btn btn-secondary" id="locateMeBtn">
+                            <i class="fas fa-crosshairs"></i>
+                            Locate Me
+                        </button>
+                    </div>
+                    <div id="farmMap" class="farm-map"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Farm Modal -->
+    <div class="modal" id="farmModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="farmModalTitle">Add Farm</h2>
+                <button class="modal-close" id="farmModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="farmForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="farmName">Farm Name *</label>
+                        <input type="text" id="farmName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="farmType">Farm Type</label>
+                        <select id="farmType" name="farm_type">
+                            <option value="mixed">Mixed</option>
+                            <option value="crop">Crop</option>
+                            <option value="livestock">Livestock</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="farmDescription">Description</label>
+                    <textarea id="farmDescription" name="description" rows="3"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="farmLocation">Location</label>
+                        <input type="text" id="farmLocation" name="location">
+                    </div>
+                    <div class="form-group">
+                        <label for="farmArea">Area (hectares)</label>
+                        <input type="number" id="farmArea" name="area_hectares" step="0.01" min="0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="farmPhone">Contact Phone</label>
+                        <input type="tel" id="farmPhone" name="contact_phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="farmEmail">Contact Email</label>
+                        <input type="email" id="farmEmail" name="contact_email">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="farmModalCancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Farm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Livestock Modal -->
+    <div class="modal" id="livestockModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="livestockModalTitle">Add Livestock</h2>
+                <button class="modal-close" id="livestockModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="livestockForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="livestockFarm">Farm *</label>
+                        <select id="livestockFarm" name="farm_id" required>
+                            <option value="">Select Farm</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="livestockTag">Tag Number *</label>
+                        <input type="text" id="livestockTag" name="tag_number" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="livestockName">Name</label>
+                        <input type="text" id="livestockName" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="livestockSpecies">Species *</label>
+                        <select id="livestockSpecies" name="species" required>
+                            <option value="">Select Species</option>
+                            <option value="cattle">Cattle</option>
+                            <option value="sheep">Sheep</option>
+                            <option value="pigs">Pigs</option>
+                            <option value="poultry">Poultry</option>
+                            <option value="goats">Goats</option>
+                            <option value="horses">Horses</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="livestockBreed">Breed</label>
+                        <input type="text" id="livestockBreed" name="breed">
+                    </div>
+                    <div class="form-group">
+                        <label for="livestockGender">Gender</label>
+                        <select id="livestockGender" name="gender">
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="livestockBirthDate">Birth Date</label>
+                        <input type="date" id="livestockBirthDate" name="birth_date">
+                    </div>
+                    <div class="form-group">
+                        <label for="livestockWeight">Current Weight (kg)</label>
+                        <input type="number" id="livestockWeight" name="current_weight" step="0.1" min="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="livestockNotes">Notes</label>
+                    <textarea id="livestockNotes" name="notes" rows="3"></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="livestockModalCancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Livestock</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Crop Modal -->
+    <div class="modal" id="cropModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="cropModalTitle">Add Crop</h2>
+                <button class="modal-close" id="cropModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="cropForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cropFarm">Farm *</label>
+                        <select id="cropFarm" name="farm_id" required>
+                            <option value="">Select Farm</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cropName">Crop Name *</label>
+                        <input type="text" id="cropName" name="name" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cropVariety">Variety</label>
+                        <input type="text" id="cropVariety" name="variety">
+                    </div>
+                    <div class="form-group">
+                        <label for="cropArea">Area (hectares) *</label>
+                        <input type="number" id="cropArea" name="area_hectares" step="0.01" min="0.01" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cropPlantedDate">Planted Date *</label>
+                        <input type="date" id="cropPlantedDate" name="planted_date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cropHarvestDate">Expected Harvest Date</label>
+                        <input type="date" id="cropHarvestDate" name="expected_harvest_date">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cropNotes">Notes</label>
+                    <textarea id="cropNotes" name="notes" rows="3"></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cropModalCancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Crop</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Generic Confirmation Modal -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="confirmationTitle">Confirm Action</h2>
+                <button class="modal-close" id="confirmationModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmationMessage">Are you sure you want to proceed?</p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="confirmationCancel">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmationConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast-container" id="toastContainer">
+        <!-- Toasts will be added here dynamically -->
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/farms.js"></script>
+    <script src="js/livestock.js"></script>
+    <script src="js/crops.js"></script>
+    <script src="js/vets.js"></script>
+    <script src="js/agrovets.js"></script>
+    <script src="js/sharing.js"></script>
+    <script src="js/contact.js"></script>
+    <script src="js/maps.js"></script>
+    <script src="js/theme.js"></script>
+</body>
+</html>
