@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Farming Finest - Farm Management Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1><i class="fas fa-leaf"></i> Farming Finest</h1>
+      <div id="auth">
+        <div class="login-form">
+          <input id="email" type="email" placeholder="Email address" required>
+          <button id="btn-login" class="primary"><i class="fas fa-sign-in-alt"></i> Login</button>
+        </div>
+        <div class="user-info">
+          <span class="user-name"></span>
+          <button id="btn-logout" class="secondary"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <main>
+      <!-- Dashboard -->
+      <section id="dashboard" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-chart-line"></i> Dashboard</h2>
+          <button id="btn-refresh" class="secondary"><i class="fas fa-sync"></i> Refresh</button>
+        </div>
+        
+        <div class="cards">
+          <div class="card">
+            <h3><i class="fas fa-cow"></i> Animals</h3>
+            <div class="card-content">
+              <div id="animal-count" class="card-number">0</div>
+              <div class="card-details">
+                <div>Healthy: <span id="healthy-count">0</span></div>
+                <div>Need attention: <span id="attention-count">0</span></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3><i class="fas fa-seedling"></i> Crops</h3>
+            <div class="card-content">
+              <div id="crop-count" class="card-number">0</div>
+              <div class="card-details">
+                <div>Active: <span id="active-crops">0</span></div>
+                <div>Area: <span id="total-area">0</span> ha</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3><i class="fas fa-box"></i> Feed Stock</h3>
+            <div class="card-content">
+              <div id="feed-count" class="card-number">0</div>
+              <div class="card-details">
+                <div class="status-low">Low stock: <span id="low-stock">0</span></div>
+                <div>Types: <span id="feed-types">0</span></div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3><i class="fas fa-money-bill-wave"></i> Sales</h3>
+            <div class="card-content">
+              <div id="sales-total" class="card-number">$0</div>
+              <div class="card-details">
+                <div class="card-trend">+0% vs last month</div>
+                <button id="btn-export" class="secondary small">
+                  <i class="fas fa-download"></i> Export
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-container">
+            <canvas id="salesChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Animals Section -->
+      <section id="animals" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-cow"></i> Animals</h2>
+          <button id="btn-add-animal" class="primary">
+            <i class="fas fa-plus"></i> Add Animal
+          </button>
+        </div>
+
+        <div class="form-group" id="animal-form" style="display:none;">
+          <h3>Add New Animal</h3>
+          <form>
+            <div class="form-row">
+              <input name="name" placeholder="Name" required>
+              <select name="species" required>
+                <option value="">Select Species</option>
+                <option value="Cow">Cow</option>
+                <option value="Goat">Goat</option>
+                <option value="Sheep">Sheep</option>
+                <option value="Chicken">Chicken</option>
+              </select>
+              <input name="breed" placeholder="Breed">
+            </div>
+            <div class="form-row">
+              <input type="date" name="dob" placeholder="Date of Birth">
+              <input type="file" name="image" accept="image/*">
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="primary">Save Animal</button>
+              <button type="button" class="secondary" id="btn-cancel-animal">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="table-container">
+          <table id="animals-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Species</th>
+                <th>Breed</th>
+                <th>Age</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="animal-list"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Vets Map -->
+      <section id="vets" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-user-md"></i> Veterinary Services</h2>
+          <div class="controls">
+            <input id="vet-search" type="text" placeholder="Search by location...">
+            <button class="secondary" id="btn-locate">
+              <i class="fas fa-location-dot"></i> My Location
+            </button>
+          </div>
+        </div>
+        <div id="map"></div>
+        <div id="vet-list" class="cards vet-cards"></div>
+      </section>
+
+      <!-- Feed Management -->
+      <section id="feeds" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-wheat-awn"></i> Feed Management</h2>
+          <button id="btn-add-feed" class="primary">
+            <i class="fas fa-plus"></i> Add Feed
+          </button>
+        </div>
+        <div class="alerts" id="feed-alerts"></div>
+        <div class="table-container">
+          <table id="feeds-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="feed-list"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modals -->
+  <div id="modal" class="modal" style="display:none">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="modal-title"></h2>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
