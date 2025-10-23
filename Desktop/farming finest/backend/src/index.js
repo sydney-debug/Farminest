@@ -43,6 +43,8 @@ app.use('/api/sales', salesRoutes);
 app.use('/api/upload', uploadRoutes);
 
 app.get('/', (req, res) => res.json({ service: 'farming-finest-backend', status: 'ok' }));
+// Health check endpoint
+app.get('/api/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Server running on port ${port}`));

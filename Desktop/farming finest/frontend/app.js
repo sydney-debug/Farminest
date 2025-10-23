@@ -19,7 +19,6 @@ function updateAuthUI(profile) {
     userInfo.style.display = 'none';
     document.querySelectorAll('.auth-required').forEach(el => el.style.display = 'none');
   }
-}
 
 document.getElementById('btn-login').addEventListener('click', async () => {
   const email = document.getElementById('email').value;
@@ -29,12 +28,11 @@ document.getElementById('btn-login').addEventListener('click', async () => {
   }
   
   try {
-    const res = await fetch(`${API}/auth/login`, {
+    const json = await safeFetch(`${API}/auth/login`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ email })
     });
-    const json = await res.json();
     
     if (json.token) {
       token = json.token;
@@ -64,10 +62,10 @@ async function loadDashboard() {
   try {
     // Load counts and data in parallel
     const [animals, crops, feeds, sales] = await Promise.all([
-      fetch(`${API}/animals`, { headers: { 'authorization': `Bearer ${token}` } }).then(r => r.json()),
-      fetch(`${API}/crops`, { headers: { 'authorization': `Bearer ${token}` } }).then(r => r.json()),
-      fetch(`${API}/feeds`, { headers: { 'authorization': `Bearer ${token}` } }).then(r => r.json()),
-      fetch(`${API}/sales/pl`, { headers: { 'authorization': `Bearer ${token}` } }).then(r => r.json())
+      safeFetch(`${API}/animals`, { headers: { 'authorization': `Bearer ${token}` } }),
+      safeFetch(`${API}/crops`, { headers: { 'authorization': `Bearer ${token}` } }),
+      safeFetch(`${API}/feeds`, { headers: { 'authorization': `Bearer ${token}` } }),
+      safeFetch(`${API}/sales/pl`, { headers: { 'authorization': `Bearer ${token}` } })
     ]);
 
     // Update dashboard cards
@@ -138,13 +136,12 @@ function initAnimalForm() {
       if (imageFile.size > 0) {
         const uploadData = new FormData();
         uploadData.append('file', imageFile);
-        const uploadRes = await fetch(`${API}/upload`, {
+        const uploadRes = await safeFetch(`${API}/upload`, {
           method: 'POST',
           headers: { 'authorization': `Bearer ${token}` },
           body: uploadData
         });
-        const { path } = await uploadRes.json();
-        imagePath = path;
+        imagePath = uploadRes.path;
       }
 
       // Create animal with optional image
@@ -152,7 +149,7 @@ function initAnimalForm() {
       delete data.image;
       if (imagePath) data.image_path = imagePath;
 
-      const res = await fetch(`${API}/animals`, {
+      const json = await safeFetch(`${API}/animals`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
@@ -160,8 +157,6 @@ function initAnimalForm() {
         },
         body: JSON.stringify(data)
       });
-
-      const json = await res.json();
       if (json.animal) {
         form.reset();
         form.style.display = 'none';
@@ -249,8 +244,7 @@ function loadFeeds(feeds = []) {
 // Vets Map
 async function loadVets() {
   try {
-    const res = await fetch(`${API}/vets`);
-    const { vets } = await res.json();
+  const { vets } = await safeFetch(`${API}/vets`);
     
     if (!map) {
       map = L.map('map').setView([0, 0], 2);
@@ -353,14 +347,30 @@ function showToast(message, type = 'info') {
     toast.id = 'toast';
     document.body.appendChild(toast);
   }
-  
+
   toast.className = `toast toast-${type}`;
   toast.textContent = message;
   toast.style.display = 'block';
-  
+
   setTimeout(() => {
     toast.style.display = 'none';
   }, 3000);
+}
+
+// Global fetch wrapper to handle 404 errors
+async function safeFetch(url, options) {
+  try {
+    const res = await fetch(url, options);
+    if (res.status === 404) {
+      showToast('Resource not found (404)', 'error');
+      return { error: 'Not found' };
+    }
+    return await res.json();
+  } catch (err) {
+    showToast('Network error', 'error');
+    return { error: 'Network error' };
+  }
+}
 }
 
 function formatCurrency(amount) {
