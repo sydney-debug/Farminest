@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Home - Farming Finest</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="header-content">
+    <h1><i class="fas fa-leaf"></i> Farming Finest</h1>
+    <nav class="main-nav">
+      <a href="/home.html" class="active">Home</a>
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/animals.html">Animals</a>
+      <a href="/health.html">Health</a>
+      <a href="/vets.html">Vets</a>
+      <a href="/agrovets.html">Agrovets</a>
+      <a href="/feeds.html">Feeds</a>
+    </nav>
+  </header>
+  <main class="container">
+    <section class="section home-grid">
+      <div class="auth-panel">
+        <h2>Welcome to Farming Finest</h2>
+        <form id="login-form">
+          <input id="login-email" type="email" placeholder="Email address" required>
+          <button id="btn-login" class="primary">Login</button>
+        </form>
+        <hr>
+        <form id="register-form">
+          <input id="reg-name" placeholder="Full name" required>
+          <input id="reg-email" type="email" placeholder="Email address" required>
+          <button id="btn-register" class="primary">Register</button>
+        </form>
+      </div>
+      <div class="promo-panel">
+        <h3>Manage your farm activities</h3>
+        <p>Track animals, crops, health records, vets and suppliers from one dashboard.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

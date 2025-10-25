@@ -411,8 +411,22 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Check for existing session
   token = localStorage.getItem('ff_token');
-  if (token) {
-    loadDashboard();
+  // Page-specific initializers
+  const path = location.pathname.split('/').pop();
+  if (path === '' || path === 'home.html') {
+    // nothing else
+  } else if (path === 'dashboard.html') {
+    if (token) loadDashboard(); else location.href = '/home.html';
+  } else if (path === 'animals.html') {
+    if (token) loadDashboard(); else location.href = '/home.html';
+  } else if (path === 'vets.html') {
+    loadVets();
+  } else if (path === 'agrovets.html') {
+    loadAgrovets();
+  } else if (path === 'health.html') {
+    if (token) loadHealthRecords(); else location.href = '/home.html';
+  } else if (path === 'feeds.html') {
+    // loads when implemented
   }
   
   // Add refresh handler
