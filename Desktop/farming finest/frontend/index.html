@@ -14,11 +14,16 @@
   <header>
     <div class="header-content">
       <h1><i class="fas fa-leaf"></i> Farming Finest</h1>
+      <nav class="main-nav">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#dashboard" class="nav-link">Dashboard</a>
+        <a href="#animals" class="nav-link">Animals</a>
+        <a href="#health" class="nav-link">Health</a>
+        <a href="#vets" class="nav-link">Vets</a>
+        <a href="#agrovets" class="nav-link">Agrovets</a>
+        <a href="#feeds" class="nav-link">Feeds</a>
+      </nav>
       <div id="auth">
-        <div class="login-form">
-          <input id="email" type="email" placeholder="Email address" required>
-          <button id="btn-login" class="primary"><i class="fas fa-sign-in-alt"></i> Login</button>
-        </div>
         <div class="user-info">
           <span class="user-name"></span>
           <button id="btn-logout" class="secondary"><i class="fas fa-sign-out-alt"></i></button>
@@ -26,6 +31,29 @@
       </div>
     </div>
   </header>
+
+  <!-- Home / Auth Section -->
+  <section id="home" class="section">
+    <div class="home-grid">
+      <div class="auth-panel">
+        <h2>Welcome to Farming Finest</h2>
+        <form id="login-form">
+          <input id="login-email" type="email" placeholder="Email address" required>
+          <button id="btn-login" class="primary">Login</button>
+        </form>
+        <hr>
+        <form id="register-form">
+          <input id="reg-name" placeholder="Full name" required>
+          <input id="reg-email" type="email" placeholder="Email address" required>
+          <button id="btn-register" class="primary">Register</button>
+        </form>
+      </div>
+      <div class="promo-panel">
+        <h3>Manage your farm activities</h3>
+        <p>Track animals, crops, health records, vets and suppliers from one dashboard.</p>
+      </div>
+    </div>
+  </section>
 
   <div class="container">
     <main>
@@ -88,6 +116,35 @@
           <div class="chart-container">
             <canvas id="salesChart"></canvas>
           </div>
+        </div>
+      </section>
+      <!-- Agrovets Section -->
+      <section id="agrovets" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-store"></i> Agrovets</h2>
+        </div>
+        <div id="agrovets-list" class="cards"></div>
+      </section>
+
+      <!-- Health Records -->
+      <section id="health" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-notes-medical"></i> Health Records</h2>
+          <button id="btn-add-health" class="primary"><i class="fas fa-plus"></i> Add Record</button>
+        </div>
+        <div class="table-container">
+          <table id="health-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Subject</th>
+                <th>Action</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody id="health-list"></tbody>
+          </table>
         </div>
       </section>
 

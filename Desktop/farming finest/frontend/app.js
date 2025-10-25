@@ -3,6 +3,18 @@ let token = null;
 let map = null;
 let salesChart = null;
 
+// Simple hash-based router
+function navigate() {
+  const hash = location.hash.replace('#', '') || 'home';
+  document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+  const el = document.getElementById(hash);
+  if (el) el.style.display = 'block';
+  // set active nav link
+  document.querySelectorAll('.nav-link').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${hash}`));
+}
+window.addEventListener('hashchange', navigate);
+
+
 // Auth & Session Management
 function updateAuthUI(profile) {
   const authDiv = document.getElementById('auth');
@@ -415,4 +427,50 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('Error exporting data', 'error');
     }
   });
+
+  // Navigation: initial route
+  navigate();
+
+  // Wire login/register on Home
+  const loginForm = document.getElementById('login-form');
+  const registerForm = document.getElementById('register-form');
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const json = await safeFetch(`${API}/auth/login`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email }) });
+    if (json.token) {
+      token = json.token; localStorage.setItem('ff_token', token); updateAuthUI(json.profile); loadDashboard(); location.hash = '#dashboard';
+    } else showToast(json.error || 'Login failed', 'error');
+  });
+
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('reg-name').value;
+    const email = document.getElementById('reg-email').value;
+    const json = await safeFetch(`${API}/auth/register`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name, email }) });
+    if (json.user) { showToast('Registered. Please login.', 'success'); }
+    else showToast(json.error || 'Register failed', 'error');
+  });
+
+  // Agrovets & Health placeholders
+  window.loadAgrovets = async function() {
+    const res = await safeFetch(`${API}/agrovets`);
+    const list = document.getElementById('agrovets-list'); list.innerHTML = '';
+    if (res && res.agrovets) res.agrovets.forEach(a => {
+      const card = document.createElement('div'); card.className = 'card';
+      card.innerHTML = `<h3>${a.name}</h3><p>${a.address || ''}</p><p>${a.phone || ''}</p>`;
+      list.appendChild(card);
+    });
+  };
+
+  window.loadHealthRecords = async function() {
+    const res = await safeFetch(`${API}/health`, { headers: { 'authorization': `Bearer ${token}` } });
+    const tbody = document.getElementById('health-list'); tbody.innerHTML = '';
+    if (res && res.records) res.records.forEach(r => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${new Date(r.date).toLocaleDateString()}</td><td>${r.type}</td><td>${r.subject}</td><td>${r.action}</td><td>${r.notes || ''}</td>`;
+      tbody.appendChild(tr);
+    });
+  };
+
 });

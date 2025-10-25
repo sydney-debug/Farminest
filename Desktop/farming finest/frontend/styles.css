@@ -19,6 +19,9 @@ body {
   line-height: 1.6;
 }
 
+.section { display: none; }
+.nav-link.active { font-weight: 700; text-decoration: underline; }
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
